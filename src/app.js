@@ -1,5 +1,1 @@
-import icon from "./image/favicon.ico";
-
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('favicon').href = icon;
-});
+console.log("Webpack is working!!!");
