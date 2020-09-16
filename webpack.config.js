@@ -1,7 +1,12 @@
+//Configuracion de las variables de entorno
+const { config } = require('dotenv');
+config();
+
 //Dependencias de configuración
 const path = require('path');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
+const DotEnv = require('dotenv-webpack');
 
 /**
  * Configuración basica para un proyecto usando webpack para mejorar un entorno 
@@ -70,51 +75,20 @@ module.exports = {
                 use: [
                     miniCssExtractPlugin.loader,
                     'css-loader',
-                    'sass-loader'
+                    'sass-loader',
                 ]
             },
             //Lectura de los archivos media (jpg, png, gif o jpeg)
             {
                 test: /\.(ico|jpg|png|gif|jpeg)$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: "static/",
-                            useRelativePath: true
-                        }
+                use: [{
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]',
+                        outputPath: "static/",
+                        useRelativePath: true
                     }
-                ]
-            },
-            /**
-             * Se establese una manera de optimizar las imagenes que se implementen en
-             * la aplicación.
-             * 
-             * Si sedesea cambiar los valores, se puede realizar siguiende la documentación
-             * en: https://www.npmjs.com/package/image-webpack-loader para una mejor optimización.
-             */
-            {
-                loader: 'image-webpack-loader',
-                options: {
-                    mozjpeg: {
-                        progressive: true,
-                        quality: 65
-                    },
-                    optipng: {
-                        enabled: false,
-                    },
-                    pngquant: {
-                        quality: [0.65, 0.90],
-                        speed: 4
-                    },
-                    gifsicle: {
-                        interlaced: false,
-                    },
-                    webp: {
-                        quality: 75
-                    }
-                }
+                }]
             }
         ]
     },
@@ -145,7 +119,9 @@ module.exports = {
         //Manejo de todo el CSS o archivos de un pre procesador de CSS
         new miniCssExtractPlugin({
             filename: 'bandle.css'
-        })
+        }),
+        //Manejo de variables de entorno en el proyecto
+        new DotEnv()
     ],
     /**
      * Se establesen las configuraciones de un servidor de desarrollo para una
@@ -154,6 +130,6 @@ module.exports = {
      * Si se desean cambiar, verifique la documentacion en: https://www.npmjs.com/package/webpack-dev-server
      */
     devServer: {
-        port: 3000
+        port: process.env.PORT
     }
 }
